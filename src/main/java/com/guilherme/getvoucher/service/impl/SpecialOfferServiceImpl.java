@@ -16,4 +16,11 @@ public class SpecialOfferServiceImpl implements SpecialOfferService {
     public SpecialOffer create(SpecialOffer specialOffer) {
         return this.specialOfferRepository.save(specialOffer);
     }
+
+    @Override
+    public SpecialOffer findById(String id) {
+        return specialOfferRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Special Offer does not exists!"));
+    }
 }

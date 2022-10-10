@@ -3,11 +3,9 @@ package com.guilherme.getvoucher.controller;
 import com.guilherme.getvoucher.model.Voucher;
 import com.guilherme.getvoucher.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +20,11 @@ public class VoucherController {
     public List<Voucher> generateVouchers(
             @RequestParam("specialOfferId") String specialOfferId,
             @RequestParam("expirationDate") Date expirationDate) {
-        return this.voucherService.generateVouchers(specialOfferId, expirationDate);
+        return voucherService.generateVouchers(specialOfferId, expirationDate);
+    }
+
+    @GetMapping("/redeem/{code}")
+    public BigDecimal redeem(@PathVariable String code, @RequestParam("email") String email) {
+        return voucherService.redeem(code, email);
     }
 }

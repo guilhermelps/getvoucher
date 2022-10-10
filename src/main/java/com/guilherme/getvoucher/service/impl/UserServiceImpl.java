@@ -16,4 +16,11 @@ public class UserServiceImpl implements UserService {
     public User create(User user) {
         return this.userRepository.save(user);
     }
+
+    @Override
+    public User findById(String email) {
+        return userRepository
+                .findById(email)
+                .orElseThrow(() -> new IllegalArgumentException("User does not exists!"));
+    }
 }

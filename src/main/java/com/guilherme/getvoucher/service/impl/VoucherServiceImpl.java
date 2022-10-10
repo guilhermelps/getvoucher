@@ -6,10 +6,12 @@ import com.guilherme.getvoucher.model.Voucher;
 import com.guilherme.getvoucher.repository.UserRepository;
 import com.guilherme.getvoucher.repository.VoucherRepository;
 import com.guilherme.getvoucher.service.SpecialOfferService;
+import com.guilherme.getvoucher.service.UserService;
 import com.guilherme.getvoucher.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +28,9 @@ public class VoucherServiceImpl implements VoucherService {
     @Autowired
     private SpecialOfferService specialOfferService;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public List<Voucher> generateVouchers(String specialOfferId, Date expirationDate) {
         SpecialOffer specialOffer = specialOfferService.findById(specialOfferId);
@@ -41,5 +46,23 @@ public class VoucherServiceImpl implements VoucherService {
         });
 
         return voucherRepository.saveAll(vouchers);
+    }
+
+    @Override
+    public BigDecimal redeem(String code, String email) {
+        User customer = userService.findById(email);
+
+        Voucher voucher = voucherRepository.findByCodeAndCustomer(code, customer);
+
+        if (voucher == null || voucher.getUsed() || voucher.getExpirationDate().before(new Date())) {
+            return null;
+        }
+
+        voucher.setUsed(true);
+        voucher.setUseDate(new Date());
+        voucherRepository.save(voucher);
+
+        return voucher.getSpecialOffer().getDiscount();
+
     }
 }

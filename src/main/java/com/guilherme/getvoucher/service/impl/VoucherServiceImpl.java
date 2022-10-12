@@ -63,6 +63,13 @@ public class VoucherServiceImpl implements VoucherService {
         voucherRepository.save(voucher);
 
         return voucher.getSpecialOffer().getDiscount();
+    }
 
+    @Override
+    public List<Voucher> findValidVouchersByCustomer(String email) {
+        User customer = userService.findById(email);
+        Date dateNow = new Date();
+
+        return voucherRepository.findByCustomerAndUsedAndExpirationDateAfter(customer, false, dateNow);
     }
 }

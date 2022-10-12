@@ -11,4 +11,6 @@ public interface VoucherService {
     public List<Voucher> generateVouchers(String specialOfferId, Date expirationDate);
 
     public BigDecimal redeem(String code, String email);
+
+    public List<Voucher> findValidVouchersByCustomer(String email);
 }

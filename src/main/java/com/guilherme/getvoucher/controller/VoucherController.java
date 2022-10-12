@@ -27,4 +27,9 @@ public class VoucherController {
     public BigDecimal redeem(@PathVariable String code, @RequestParam("email") String email) {
         return voucherService.redeem(code, email);
     }
+
+    @GetMapping("/user/valid")
+    public List<Voucher> findValidVouchersByCustomer(@RequestParam("email") String email) {
+        return voucherService.findValidVouchersByCustomer(email);
+    }
 }

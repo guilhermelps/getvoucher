@@ -34,6 +34,7 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public List<Voucher> generateVouchers(String specialOfferId, Date expirationDate) {
         SpecialOffer specialOffer = specialOfferService.findById(specialOfferId);
+
         List<Voucher> vouchers = new ArrayList<>();
         List<User> users = userRepository.findAll();
 
@@ -51,15 +52,16 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public BigDecimal redeem(String code, String email) {
         User customer = userService.findById(email);
-
         Voucher voucher = voucherRepository.findByCodeAndCustomer(code, customer);
 
-        if (voucher == null || voucher.getUsed() || voucher.getExpirationDate().before(new Date())) {
-            return null;
+        Date dateNow = new Date();
+
+        if (voucher == null || voucher.getUsed() || voucher.getExpirationDate().before(dateNow)) {
+            throw  new Error("This voucher is invalid!");
         }
 
         voucher.setUsed(true);
-        voucher.setUseDate(new Date());
+        voucher.setUseDate(dateNow);
         voucherRepository.save(voucher);
 
         return voucher.getSpecialOffer().getDiscount();

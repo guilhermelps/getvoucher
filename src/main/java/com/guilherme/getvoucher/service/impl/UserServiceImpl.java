@@ -27,8 +27,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(User user) {
         List<Role> roles = roleRepository.saveAll(user.getRoles());
+
         user.setRoles(roles);
         user.setPassword(passwordEncoder().encode(user.getPassword()));
+
         return this.userRepository.save(user);
     }
 

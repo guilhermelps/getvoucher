@@ -3,6 +3,7 @@ package com.guilherme.getvoucher.controller;
 import com.guilherme.getvoucher.model.Voucher;
 import com.guilherme.getvoucher.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ public class VoucherController {
     @Autowired
     private VoucherService voucherService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/generate")
     public List<Voucher> generateVouchers(
             @RequestParam("specialOfferId") String specialOfferId,

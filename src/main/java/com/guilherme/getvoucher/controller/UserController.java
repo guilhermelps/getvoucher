@@ -3,6 +3,7 @@ package com.guilherme.getvoucher.controller;
 import com.guilherme.getvoucher.model.User;
 import com.guilherme.getvoucher.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public User create(@RequestBody User user) {
         return this.userService.create(user);
